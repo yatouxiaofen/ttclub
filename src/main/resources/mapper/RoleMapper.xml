@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fendi.ttclub.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.Role">
+    <id column="tr_id" jdbcType="INTEGER" property="trId" />
+    <result column="parent_tr_id" jdbcType="INTEGER" property="parentTrId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="gen_time" jdbcType="TIMESTAMP" property="genTime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tr_id, parent_tr_id, role_name, gen_time, description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_role
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_role
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.Role">
+    insert into t_role (tr_id, parent_tr_id, role_name, 
+      gen_time, description)
+    values (#{trId,jdbcType=INTEGER}, #{parentTrId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, 
+      #{genTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.Role">
+    insert into t_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="trId != null">
+        tr_id,
+      </if>
+      <if test="parentTrId != null">
+        parent_tr_id,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="genTime != null">
+        gen_time,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="trId != null">
+        #{trId,jdbcType=INTEGER},
+      </if>
+      <if test="parentTrId != null">
+        #{parentTrId,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null">
+        #{genTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.Role">
+    update t_role
+    <set>
+      <if test="parentTrId != null">
+        parent_tr_id = #{parentTrId,jdbcType=INTEGER},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null">
+        gen_time = #{genTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.Role">
+    update t_role
+    set parent_tr_id = #{parentTrId,jdbcType=INTEGER},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      gen_time = #{genTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectRoleList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_role
+  </select>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fendi.ttclub.dao.website.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.website.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cat_id" property="catId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gen_time" property="genTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="recommended" property="recommended" jdbcType="INTEGER" />
+    <result column="hotest" property="hotest" jdbcType="INTEGER" />
+    <result column="read_count" property="readCount" jdbcType="INTEGER" />
+    <result column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="article_ip" property="articleIp" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.fendi.ttclub.entity.website.Article" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cat_id, name, gen_time, state, recommended, hotest, read_count, customer_id, 
+    article_ip, remark, menu_code, last_update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from a_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getList" parameterType="com.fendi.ttclub.entity.website.Article" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from a_article
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from a_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.website.Article" >
+    insert into a_article (cat_id, name,
+      gen_time, state, recommended, 
+      hotest, customer_id,
+      article_ip, remark, menu_code, 
+      last_update_time, content)
+    values (#{catId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+      NOW(), #{state,jdbcType=INTEGER}, #{recommended,jdbcType=INTEGER},
+      #{hotest,jdbcType=INTEGER}, #{customerId,jdbcType=INTEGER},
+      #{articleIp,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}, 
+      NOW(), #{content,jdbcType=LONGVARBINARY})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.website.Article" >
+    update a_article
+    <set >
+      <if test="catId != null" >
+        cat_id = #{catId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="recommended != null" >
+        recommended = #{recommended,jdbcType=INTEGER},
+      </if>
+      <if test="hotest != null" >
+        hotest = #{hotest,jdbcType=INTEGER},
+      </if>
+      <if test="readCount != null" >
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="articleIp != null" >
+        article_ip = #{articleIp,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCode != null" >
+        menu_code = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+      last_update_time = NOW()
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

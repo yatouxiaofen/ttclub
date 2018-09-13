@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fendi.ttclub.dao.website.WebsiteLogMapper" >
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.website.WebsiteLog" >
+    <id column="log_id" property="logId" jdbcType="INTEGER" />
+    <result column="op_type" property="opType" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="gen_time" property="genTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    log_id, op_type, content, customer_id, gen_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from a_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from a_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.website.WebsiteLog" >
+    insert into a_log (log_id, op_type, content, 
+      customer_id, gen_time)
+    values (#{logId,jdbcType=INTEGER}, #{opType,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{customerId,jdbcType=INTEGER}, #{genTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.website.WebsiteLog" >
+    insert into a_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="opType != null" >
+        op_type,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="genTime != null" >
+        gen_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=INTEGER},
+      </if>
+      <if test="opType != null" >
+        #{opType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="genTime != null" >
+        #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.website.WebsiteLog" >
+    update a_log
+    <set >
+      <if test="opType != null" >
+        op_type = #{opType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="genTime != null" >
+        gen_time = #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.website.WebsiteLog" >
+    update a_log
+    set op_type = #{opType,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=INTEGER},
+      gen_time = #{genTime,jdbcType=TIMESTAMP}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+</mapper>

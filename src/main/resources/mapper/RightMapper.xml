@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fendi.ttclub.dao.RightMapper">
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.Right">
+    <id column="tr_id" jdbcType="INTEGER" property="trId" />
+    <result column="parent_tr_id" jdbcType="INTEGER" property="parentTrId" />
+    <result column="right_name" jdbcType="VARCHAR" property="rightName" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="show_order" jdbcType="INTEGER" property="showOrder" />
+    <result column="gen_time" jdbcType="TIMESTAMP" property="genTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tr_id, parent_tr_id, right_name, url, description, show_order, gen_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_right
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_right
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.Right">
+    insert into t_right (parent_tr_id, right_name,
+      url, description, show_order, 
+      gen_time)
+    values (#{parentTrId,jdbcType=INTEGER}, #{rightName,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{showOrder,jdbcType=INTEGER}, 
+      NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.Right">
+    insert into t_right
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="trId != null">
+        tr_id,
+      </if>
+      <if test="parentTrId != null">
+        parent_tr_id,
+      </if>
+      <if test="rightName != null">
+        right_name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="showOrder != null">
+        show_order,
+      </if>
+      <if test="genTime != null">
+        gen_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="trId != null">
+        #{trId,jdbcType=INTEGER},
+      </if>
+      <if test="parentTrId != null">
+        #{parentTrId,jdbcType=INTEGER},
+      </if>
+      <if test="rightName != null">
+        #{rightName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="showOrder != null">
+        #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="genTime != null">
+        #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.Right">
+    update t_right
+    <set>
+      <if test="parentTrId != null">
+        parent_tr_id = #{parentTrId,jdbcType=INTEGER},
+      </if>
+      <if test="rightName != null">
+        right_name = #{rightName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="showOrder != null">
+        show_order = #{showOrder,jdbcType=INTEGER},
+      </if>
+      <if test="genTime != null">
+        gen_time = #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.Right">
+    update t_right
+    set parent_tr_id = #{parentTrId,jdbcType=INTEGER},
+      right_name = #{rightName,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      show_order = #{showOrder,jdbcType=INTEGER},
+      gen_time = #{genTime,jdbcType=TIMESTAMP}
+    where tr_id = #{trId,jdbcType=INTEGER}
+  </update>
+
+  <!-- fendi.liu add 2018/4/20 -->
+  <!-- 查询所有权限  支持多层嵌套 -->
+  <resultMap id="RightMap" type="com.fendi.ttclub.entity.Right">
+    <id column="tr_id" property="trId" jdbcType="INTEGER" />
+    <result column="parent_tr_id" property="parentTrId" jdbcType="INTEGER" />
+    <result column="right_name" property="rightName" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="show_order" property="showOrder" jdbcType="INTEGER" />
+    <result column="gen_time" property="genTime" jdbcType="TIMESTAMP" />
+    <collection property="children" column="{trId=tr_id}" select="selectRightList" />
+  </resultMap>
+  <select id="selectRightList" resultMap="RightMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_right
+    <if test="trId == null">
+      WHERE parent_tr_id = 0
+    </if>
+    <if test="trId != null">
+      WHERE parent_tr_id = #{trId}
+    </if>
+    <if test="rightName != null">
+      AND right_name = #{rightName}
+    </if>
+  </select>
+
+  <!-- 仅查询用户拥有的权限 本系统使用五表权限系统  只为角色分配权限 -->
+  <resultMap id="UserRightMap" type="com.fendi.ttclub.entity.Right">
+    <id column="tr_id" property="trId" jdbcType="INTEGER" />
+    <result column="parent_tr_id" property="parentTrId" jdbcType="INTEGER" />
+    <result column="right_name" property="rightName" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="show_order" property="showOrder" jdbcType="INTEGER" />
+    <result column="gen_time" property="genTime" jdbcType="TIMESTAMP" />
+    <result column="userId" property="userId" jdbcType="TIMESTAMP" />
+    <collection property="children" column="{trId=tr_id,userId=userId}" select="selectUserRightList" />
+  </resultMap>
+  <select id="selectUserRightList" parameterType="java.util.Map" resultMap="UserRightMap">
+    select
+    ri.*,${userId} as userId
+  from
+    t_user_role_relation ur,
+    t_role r,
+    t_role_right_relation rr,
+    t_right ri
+  where ur.`tr_id` = r.`tr_id`
+    and r.`tr_id` = rr.`role_id`
+    and rr.`right_id` = ri.`tr_id`
+    <if test="trId != null">
+      and ri.`parent_tr_id` = #{trId,jdbcType=INTEGER}
+    </if>
+    <if test="trId == null">
+      and ri.`parent_tr_id` = 0
+    </if>
+    and ur.`tu_id`= #{userId,jdbcType=INTEGER}
+  </select>
+
+  <!-- 查询全部权限，角色拥有权限roleId不为空 多级嵌套 -->
+  <resultMap id="RoleRightResultMap" type="com.fendi.ttclub.entity.Right">
+    <id column="tr_id" jdbcType="INTEGER" property="trId" />
+    <result column="parent_tr_id" jdbcType="INTEGER" property="parentTrId" />
+    <result column="right_name" jdbcType="VARCHAR" property="rightName" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="show_order" jdbcType="INTEGER" property="showOrder" />
+    <result column="gen_time" jdbcType="TIMESTAMP" property="genTime" />
+    <result column="roleId" jdbcType="INTEGER" property="roleId" />
+    <result column="roId" jdbcType="INTEGER" property="roId" />
+    <collection property="children" column="{tr_id=tr_id,roId=roId}" select="selectChildRoleRightList" />
+  </resultMap>
+  <sql id="RoleRight_Column_List">
+    ri.tr_id, ri.parent_tr_id, ri.right_name, ri.url, ri.description, ri.show_order, ri.gen_time, ro.tr_id roleId
+  </sql>
+  <select id="selectRoleRightList" resultMap="RoleRightResultMap" parameterType="java.lang.Integer">
+    SELECT
+    <include refid="RoleRight_Column_List"/>
+    , ${roId} as roId
+    FROM t_right ri
+    LEFT JOIN
+    (SELECT
+    r3.`tr_id`,
+    r3.`role_name`,
+    r2.`right_id` rightId
+    FROM
+    t_role_right_relation r2,
+    t_role r3
+    WHERE r2.`role_id` = r3.`tr_id`
+    AND r2.`role_id` = #{roId}) ro
+    ON ri.tr_id = ro.rightId
+    WHERE ri.parent_tr_id = 0
+  </select>
+  <select id="selectChildRoleRightList" resultMap="RoleRightResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="RoleRight_Column_List"/>
+    , ${roId} as roId
+    FROM t_right ri
+    LEFT JOIN
+    (SELECT
+    r3.`tr_id`,
+    r3.`role_name`,
+    r2.`right_id` rightId
+    FROM
+    t_role_right_relation r2,
+    t_role r3
+    WHERE r2.`role_id` = r3.`tr_id`
+    AND r2.`role_id` = #{roId,jdbcType=INTEGER}) ro
+    ON ri.tr_id = ro.rightId
+    WHERE ri.parent_tr_id = #{tr_id,jdbcType=INTEGER}
+  </select>
+</mapper>

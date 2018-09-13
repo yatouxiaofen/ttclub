@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fendi.ttclub.dao.RoleRightMapper">
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.RoleRight">
+    <id column="trr_id" jdbcType="INTEGER" property="trrId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="right_id" jdbcType="INTEGER" property="rightId" />
+    <result column="right_type" jdbcType="CHAR" property="rightType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    trr_id, role_id, right_id, right_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_role_right_relation
+    where trr_id = #{trrId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_role_right_relation
+    where trr_id = #{trrId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer">
+    delete from t_role_right_relation
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.RoleRight">
+    insert into t_role_right_relation (role_id, right_id,
+      right_type)
+    values (#{roleId,jdbcType=INTEGER}, #{rightId,jdbcType=INTEGER},
+      #{rightType,jdbcType=CHAR})
+  </insert>
+<!--  <insert id="insertOrUpdate" parameterType="com.fendi.ttclub.entity.RoleRight">
+      <selectKey keyProperty="count" resultType="int" order="BEFORE">
+        select count(*) from t_role_right_relation where role_id = #{roleId} and right_id=#{rightId}
+      </selectKey>
+      <if test="count > 0">
+        update t_role_right_relation
+        set role_id = #{roleId,jdbcType=INTEGER},
+        right_id = #{rightId,jdbcType=INTEGER},
+        right_type = #{rightType,jdbcType=CHAR}
+        where role_id = #{roleId} and right_id=#{rightId}
+      </if>
+      <if test="count==0">
+        insert into t_role_right_relation (role_id, right_id, right_type)
+        values (#{roleId,jdbcType=INTEGER}, #{rightId,jdbcType=INTEGER},#{rightType,jdbcType=CHAR})
+      </if>
+  </insert>-->
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.RoleRight">
+    insert into t_role_right_relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="trrId != null">
+        trr_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="rightId != null">
+        right_id,
+      </if>
+      <if test="rightType != null">
+        right_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="trrId != null">
+        #{trrId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="rightId != null">
+        #{rightId,jdbcType=INTEGER},
+      </if>
+      <if test="rightType != null">
+        #{rightType,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.RoleRight">
+    update t_role_right_relation
+    <set>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="rightId != null">
+        right_id = #{rightId,jdbcType=INTEGER},
+      </if>
+      <if test="rightType != null">
+        right_type = #{rightType,jdbcType=CHAR},
+      </if>
+    </set>
+    where trr_id = #{trrId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.RoleRight">
+    update t_role_right_relation
+    set role_id = #{roleId,jdbcType=INTEGER},
+      right_id = #{rightId,jdbcType=INTEGER},
+      right_type = #{rightType,jdbcType=CHAR}
+    where trr_id = #{trrId,jdbcType=INTEGER}
+  </update>
+</mapper>

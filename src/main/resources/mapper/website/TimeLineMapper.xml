@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fendi.ttclub.dao.website.TimeLineMapper" >
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.website.TimeLine" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tu_id" property="tuId" jdbcType="INTEGER" />
+    <result column="login_name" property="userName" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="gen_time" property="genTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    l.id, l.tu_id, c.login_name,l.content, l.images, l.gen_time, l.last_update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from a_timeline l
+    left join a_customer c on l.tu_id = c.id
+    where l.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.fendi.ttclub.entity.website.TimeLine" >
+    <!--<bind name="pattern" value="'%' + _parameter.userName + '%'" />-->
+    select
+    <include refid="Base_Column_List" />
+    from a_timeline l
+    left join a_customer c on l.tu_id = c.id
+    <where>
+      <if test="userName!=null">
+        c.login_name like concat(concat('%',#{userName}),'%')
+        /*  #{pattern }*/
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from a_timeline
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.website.TimeLine" >
+    insert into a_timeline (id, tu_id, content, 
+      images, gen_time, last_update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{tuId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{genTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.website.TimeLine" >
+    insert into a_timeline
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tuId != null" >
+        tu_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="genTime != null" >
+        gen_time,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tuId != null" >
+        #{tuId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null" >
+        #{genTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.website.TimeLine" >
+    update a_timeline
+    <set >
+      <if test="tuId != null" >
+        tu_id = #{tuId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null" >
+        gen_time = #{genTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.website.TimeLine" >
+    update a_timeline
+    set tu_id = #{tuId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      gen_time = #{genTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

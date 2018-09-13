@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fendi.ttclub.dao.OrganzationMapper">
+  <resultMap id="BaseResultMap" type="com.fendi.ttclub.entity.Organzation">
+    <id column="to_id" jdbcType="CHAR" property="toId" />
+    <result column="parent_to_id" jdbcType="CHAR" property="parentToId" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+    <result column="org_description" jdbcType="VARCHAR" property="orgDescription" />
+    <result column="gen_time" jdbcType="TIMESTAMP" property="genTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    to_id, parent_to_id, org_name, org_description, gen_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_organzation
+    where to_id = #{toId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_organzation
+    where to_id = #{toId,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fendi.ttclub.entity.Organzation">
+    insert into t_organzation (to_id, parent_to_id, org_name, 
+      org_description, gen_time)
+    values (#{toId,jdbcType=CHAR}, #{parentToId,jdbcType=CHAR}, #{orgName,jdbcType=VARCHAR}, 
+      #{orgDescription,jdbcType=VARCHAR}, #{genTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fendi.ttclub.entity.Organzation">
+    insert into t_organzation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="toId != null">
+        to_id,
+      </if>
+      <if test="parentToId != null">
+        parent_to_id,
+      </if>
+      <if test="orgName != null">
+        org_name,
+      </if>
+      <if test="orgDescription != null">
+        org_description,
+      </if>
+      <if test="genTime != null">
+        gen_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="toId != null">
+        #{toId,jdbcType=CHAR},
+      </if>
+      <if test="parentToId != null">
+        #{parentToId,jdbcType=CHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgDescription != null">
+        #{orgDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null">
+        #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fendi.ttclub.entity.Organzation">
+    update t_organzation
+    <set>
+      <if test="parentToId != null">
+        parent_to_id = #{parentToId,jdbcType=CHAR},
+      </if>
+      <if test="orgName != null">
+        org_name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgDescription != null">
+        org_description = #{orgDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="genTime != null">
+        gen_time = #{genTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where to_id = #{toId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fendi.ttclub.entity.Organzation">
+    update t_organzation
+    set parent_to_id = #{parentToId,jdbcType=CHAR},
+      org_name = #{orgName,jdbcType=VARCHAR},
+      org_description = #{orgDescription,jdbcType=VARCHAR},
+      gen_time = #{genTime,jdbcType=TIMESTAMP}
+    where to_id = #{toId,jdbcType=CHAR}
+  </update>
+</mapper>

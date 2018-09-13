@@ -1,0 +1,30 @@
+html,body,div,h1,h2,h3,h4,h5,h6,span,label,form,table,ul,li{
+    margin: 0;
+    padding: 0;
+}
+
+.easyui-accordion ul li{
+    list-style: none;
+    line-height: 25px;
+}
+
+.easyui-accordion ul li ul li{
+    padding-left: 10px;
+}
+
+.easyui-accordion ul li a{
+    text-decoration: none;
+}
+
+.textTitle{
+    float: left;
+    width: 130px;
+    height: 32px;
+    text-align: right;
+    line-height: 32px;
+    padding: 0 10px;
+}
+.textareaContent{
+    width: 500px;
+    float: left;
+}
